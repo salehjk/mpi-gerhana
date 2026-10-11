@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Gerhana - Petualangan Antariksa Kelas VIII</title>
+    <!-- Font Awesome untuk Ikon Premium -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Poppins:wght@300;400;600&display=swap');
+
+        /* --- VARIABLES & BASE STYLES --- */
+        :root {
+            --bg-main: #081229;
+            --panel-bg: #102542;
+            --accent: #FFD700;
+            --accent-hover: #ffea75;
+            --text-main: #FFFFFF;
+            --text-muted: #a0aec0;
+            --success: #38a169;
+            --danger: #e53e3e;
+            --glass-bg: rgba(16, 37, 66, 0.7);
+            --glass-border: rgba(255, 215, 0, 0.3);
+            --font-title: 'Fredoka', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- BACKGROUND ANIMATION (STARS & GALAXY) --- */
+        .space-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: radial-gradient(circle at center, #111a3a 0%, #081229 100%); overflow: hidden;
+        }
+
+        .stars {
+            width: 1px; height: 1px; background: transparent;
+            box-shadow: 1744px 122px #FFF, 134px 1321px #FFF, 922px 443px #FFF, 500px 500px #FFF, 200px 800px #FFF, 1200px 300px #FFF, 800px 900px #FFF, 150px 250px #FFF, 1800px 600px #FFF, 1000px 100px #FFF, 300px 1000px #FFF;
+            animation: animStar 50s linear infinite;
+        }
+
+        .stars2 {
+            width: 2px; height: 2px; background: transparent;
+            box-shadow: 100px 200px #FFF, 500px 600px #FFF, 900px 100px #FFF, 1200px 800px #FFF, 300px 400px #FFF, 800px 500px #FFF, 1500px 200px #FFF, 400px 900px #FFF;
+            animation: animStar 100s linear infinite;
+        }
+
+        @keyframes animStar {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-2000px); }
+        }
+
+        /* --- UTILITY CLASSES --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-title); color: var(--accent); }
+        h2 i, h3 i { margin-right: 10px; }
+        
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 24px; background-color: var(--accent); color: var(--bg-main);
+            font-family: var(--font-title); font-size: 1.1rem; font-weight: 600;
+            border: none; border-radius: 30px; cursor: pointer; transition: all 0.3s ease;
+            text-decoration: none; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn:hover { background-color: var(--accent-hover); transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
+        .btn-secondary { background-color: transparent; color: var(--accent); border: 2px solid var(--accent); box-shadow: none; }
+        .btn-secondary:hover { background-color: rgba(255, 215, 0, 0.1); }
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- LAYOUT & SECTIONS --- */
+        .page { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; min-height: 100vh; flex-direction: column; justify-content: center; }
+        .page.active { display: flex; }
+
+        /* --- 1. SPLASH SCREEN --- */
+        #splash { text-align: center; align-items: center; }
+        .splash-title { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 20px var(--accent); letter-spacing: 2px; }
+        .splash-subtitle { font-size: 1.5rem; margin-bottom: 40px; color: var(--text-muted); }
+        .floating-elements { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: -1; color: rgba(255,255,255,0.3); }
+        .float-obj { position: absolute; animation: float 6s ease-in-out infinite; font-size: 3rem; }
+        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+
+        /* --- 2. LOGIN --- */
+        #login .login-container { max-width: 500px; margin: 0 auto; padding: 40px; text-align: center; width: 100%; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--accent); background: rgba(0,0,0,0.3); color: white; font-family: var(--font-body); outline: none; transition: 0.3s; }
+        .form-control:focus { box-shadow: 0 0 10px var(--accent); }
+        .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .avatar-option { font-size: 2.5rem; cursor: pointer; padding: 10px; border-radius: 10px; border: 2px solid transparent; transition: 0.3s; text-align: center; color: var(--accent); }
+        .avatar-option.selected { border-color: var(--accent); background: rgba(255,215,0,0.2); transform: scale(1.1); }
+
+        /* --- 3. DASHBOARD --- */
+        .dash-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; margin-bottom: 30px; }
+        .user-profile { display: flex; align-items: center; gap: 15px; }
+        .user-avatar { font-size: 2.5rem; background: rgba(255,255,255,0.1); width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); }
+        .user-info h2 { color: white; font-size: 1.5rem; margin: 0; }
+        .user-level { color: var(--accent); font-weight: bold; }
+        .stats-box { text-align: right; }
+        .xp-bar-container { width: 150px; height: 10px; background: rgba(255,255,255,0.2); border-radius: 5px; margin-top: 5px; overflow: hidden;}
+        .xp-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .menu-card { padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .menu-card:hover { transform: translateY(-10px); background: rgba(255, 215, 0, 0.1); border-color: var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .menu-icon { font-size: 3rem; color: var(--accent); }
+        .menu-card h3 { color: white; }
+
+        /* --- NOVA AI ASSISTANT --- */
+        #nova-assistant { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; align-items: flex-end; gap: 15px; }
+        .nova-bubble { background: var(--glass-bg); padding: 15px; border-radius: 20px 20px 0 20px; border: 1px solid var(--accent); max-width: 250px; font-size: 0.9rem; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); display: none; }
+        .nova-avatar { font-size: 3.5rem; cursor: pointer; animation: float 3s infinite; filter: drop-shadow(0 0 10px var(--accent)); color: #63b3ed; }
+
+        /* --- SHARED PAGE STYLES --- */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
+        .content-box { padding: 30px; font-size: 1.1rem; line-height: 1.6; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; }
+        
+        /* --- 6. PETA KONSEP --- */
+        .concept-map { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px 0; }
+        .node { padding: 15px 30px; background: var(--glass-bg); border: 2px solid var(--accent); border-radius: 30px; font-weight: bold; position: relative; text-align: center; }
+        .node i { margin-right: 8px; color: var(--accent); }
+        .arrow { font-size: 1.5rem; color: var(--accent); }
+        .row-nodes { display: flex; gap: 40px; }
+
+        /* --- 7. RUANG MATERI --- */
+        .materi-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; }
+        .materi-tab { padding: 8px 15px; background: rgba(255,255,255,0.1); border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        .materi-tab:hover { background: rgba(255, 215, 0, 0.2); }
+        .materi-tab.active { background: var(--accent); color: var(--bg-main); font-weight: bold; }
+        .materi-content-section { display: none; }
+        .materi-content-section.active { display: block; animation: fadeIn 0.5s; }
+        .fact-box { background: rgba(255, 215, 0, 0.1); border-left: 4px solid var(--accent); padding: 15px; margin: 20px 0; border-radius: 0 10px 10px 0; }
+        .infographic { width: 100%; height: 250px; background: #02050c; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); position: relative; overflow: hidden; margin: 20px 0; }
+
+        /* --- 8. LAB MAYA (SIMULATION) --- */
+        #lab-container { position: relative; width: 100%; height: 400px; background: #02050c; border-radius: 15px; border: 2px solid var(--accent); overflow: hidden; margin-bottom: 20px; touch-action: none; box-shadow: inset 0 0 50px rgba(0,0,0,0.8);}
+        .celestial { position: absolute; border-radius: 50%; cursor: grab; user-select: none; }
+        .celestial:active { cursor: grabbing; }
+        
+        #sun-obj { width: 80px; height: 80px; background: radial-gradient(circle, #fffbe0 10%, #FFD700 40%, #ff8c00 80%); left: 50px; top: 160px; box-shadow: 0 0 60px #ff8c00, 0 0 100px rgba(255, 215, 0, 0.4); z-index: 4; cursor: default;}
+        #earth-obj { width: 60px; height: 60px; background: radial-gradient(circle at 30% 30%, #5dade2, #1f618d 70%, #000); left: 300px; top: 170px; box-shadow: 0 0 15px rgba(93, 173, 226, 0.5); z-index: 3;}
+        #moon-obj { width: 30px; height: 30px; background: radial-gradient(circle at 30% 30%, #e0e0e0, #888 70%, #222); left: 200px; top: 185px; box-shadow: 0 0 10px rgba(255,255,255,0.2); z-index: 5;}
+        
+        .orbit-line { position: absolute; border: 1px dashed rgba(255,255,255,0.15); border-radius: 50%; pointer-events: none; }
+        #lab-status { text-align: center; font-weight: bold; color: var(--accent); margin-bottom: 10px; height: 24px;}
+        
+        /* SVGs for Shadows in Lab Maya */
+        #shadow-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+        
+        /* --- 5 & 10. QUIZ (PRETEST & EVALUASI) --- */
+        .quiz-container { max-width: 800px; margin: 0 auto; }
+        .question { margin-bottom: 20px; font-size: 1.2rem; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
+        .option:hover { background: rgba(255,255,255,0.2); border-color: var(--accent); }
+        .option.selected { background: rgba(255, 215, 0, 0.2); border-color: var(--accent); }
+        .option.correct { background: rgba(56, 161, 105, 0.3); border-color: var(--success); }
+        .option.wrong { background: rgba(229, 62, 62, 0.3); border-color: var(--danger); }
+
+        /* --- 11. HASIL MISI --- */
+        .result-card { text-align: center; max-width: 600px; margin: 0 auto; }
+        .result-score { font-size: 4rem; color: var(--accent); font-family: var(--font-title); margin: 20px 0; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+        .badge-container { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .badge { font-size: 2rem; background: rgba(255,255,255,0.1); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .splash-title { font-size: 2.5rem; }
+            .dash-header { flex-direction: column; text-align: center; gap: 15px; }
+            .row-nodes { flex-direction: column; gap: 20px; }
+            #lab-container { height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BACKGROUND -->
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+
+    <!-- FLOATING DECORATIONS -->
+    <div class="floating-elements" id="floating-bg">
+        <div class="float-obj" style="top: 15%; left: 10%; animation-delay: 0s;"><i class="fa-solid fa-globe"></i></div>
+        <div class="float-obj" style="top: 70%; left: 80%; animation-delay: 2s;"><i class="fa-solid fa-meteor"></i></div>
+        <div class="float-obj" style="top: 40%; left: 85%; animation-delay: 4s;"><i class="fa-solid fa-satellite"></i></div>
+        <div class="float-obj" style="top: 80%; left: 15%; animation-delay: 1s;"><i class="fa-brands fa-space-awesome"></i></div>
+    </div>
+
+    <!-- NOVA AI ASSISTANT -->
+    <div id="nova-assistant" class="hidden">
+        <div class="nova-bubble" id="nova-text">Halo Penjelajah! Siap untuk misi hari ini?</div>
+        <div class="nova-avatar" onclick="toggleNovaBubble()"><i class="fa-solid fa-robot"></i></div>
+    </div>
+
+    <!-- ================= PAGES ================= -->
+
+    <!-- PAGE 1: SPLASH SCREEN -->
+    <section id="page-splash" class="page active">
+        <div class="glass-panel" style="max-width: 600px; margin: 0 auto; padding: 40px; text-align: center; border-radius: 30px;">
+            <div style="font-size: 4rem; margin-bottom: 20px; color: var(--accent);"><i class="fa-solid fa-school"></i></div>
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 20px;">SMP Negeri Sinombayuga</p>
+            <h1 class="splash-title">EKSPLORASI GERHANA</h1>
+            <p class="splash-subtitle">Petualangan Antariksa Kelas VIII</p>
+            <button class="btn" onclick="navTo('login')"><i class="fa-solid fa-rocket"></i> MULAI MISI</button>
+        </div>
+    </section>
+
+    <!-- PAGE 2: LOGIN -->
+    <section id="page-login" class="page">
+        <div class="glass-panel login-container fade-in">
+            <h2><i class="fa-solid fa-satellite-dish"></i> Pusat Kendali Misi</h2>
+            <p style="margin-bottom: 20px; color: var(--text-muted);">Identifikasi dirimu sebelum meluncur</p>
+            
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" id="reg-name" class="form-control" placeholder="Masukkan namamu...">
+            </div>
+            <div class="form-group">
+                <label>Kelas</label>
+                <select id="reg-class" class="form-control">
+                    <option value="">Pilih Kelas</option>
+                    <option value="VIII A">VIII A</option>
+                    <option value="VIII B">VIII B</option>
+                    <option value="VIII C">VIII C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Nomor Absen</label>
+                <input type="number" id="reg-absen" class="form-control" placeholder="Contoh: 15">
+            </div>
+            <div class="form-group">
+                <label>Pilih Avatar Karakter</label>
+                <div class="avatar-grid" id="avatar-selection">
+                    <div class="avatar-option selected" onclick="selectAvatar(this, '<i class=\'fa-solid fa-user-astronaut\'></i>')" title="Astronot"><i class="fa-solid fa-user-astronaut"></i></div>
+                    <div class="avatar-option" onclick="selectAvatar(this, '<i class=\'fa-solid fa-satellite\'></i>')" title="Satelit"><i class="fa-solid fa-satellite"></i></div>
+                    <div class="avatar-option" onclick="selectAvatar(this, '<i class=\'fa-solid fa-moon\'></i>')" title="Bulan"><i class="fa-solid fa-moon"></i></div>
+                    <div class="avatar-option" onclick="selectAvatar(this, '<i class=\'fa-solid fa-sun\'></i>')" title="Matahari"><i class="fa-solid fa-sun"></i></div>
+                </div>
+            </div>
+            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="registerUser()"><i class="fa-solid fa-shuttle-space"></i> KONFIRMASI PELUNCURAN</button>
+        </div>
+    </section>
+
+    <!-- PAGE 3: DASHBOARD -->
+    <section id="page-dashboard" class="page">
+        <div class="glass-panel dash-header fade-in">
+            <div class="user-profile">
+                <div class="user-avatar" id="dash-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                <div class="user-info">
+                    <h2 id="dash-name">Nama Siswa</h2>
+                    <p><span id="dash-class">Kelas VIII</span> | <span class="user-level" id="dash-level"><i class="fa-solid fa-rocket"></i> Kadet Antariksa</span></p>
+                </div>
+            </div>
+            <div class="stats-box">
+                <div style="font-size: 1.5rem; color: var(--accent); font-family: var(--font-title);"><span id="dash-xp">0</span> XP</div>
+                <div style="font-size: 0.9rem;">Progress Misi: <span id="dash-progress-text">0%</span></div>
+                <div class="xp-bar-container"><div class="xp-bar" id="dash-progress-bar"></div></div>
+            </div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.1s" onclick="navTo('pendahuluan')">
+                <div class="menu-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3>Pendahuluan</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.2s" onclick="navTo('pretest')">
+                <div class="menu-icon"><i class="fa-solid fa-file-signature"></i></div>
+                <h3>Pretest</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.3s" onclick="navTo('petakonsep')">
+                <div class="menu-icon"><i class="fa-solid fa-sitemap"></i></div>
+                <h3>Peta Konsep</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.4s" onclick="navTo('materi')">
+                <div class="menu-icon"><i class="fa-solid fa-book-open"></i></div>
+                <h3>Ruang Materi</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.5s" onclick="navTo('labmaya')">
+                <div class="menu-icon"><i class="fa-solid fa-microscope"></i></div>
+                <h3>Lab Maya</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.6s" onclick="navTo('lkpd')">
+                <div class="menu-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                <h3>LKPD Investigasi</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.7s" onclick="navTo('evaluasi')">
+                <div class="menu-icon"><i class="fa-solid fa-brain"></i></div>
+                <h3>Misi Evaluasi</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.8s" onclick="navTo('hasil')">
+                <div class="menu-icon"><i class="fa-solid fa-trophy"></i></div>
+                <h3>Hasil Misi</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 0.9s" onclick="navTo('refleksi')">
+                <div class="menu-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <h3>Refleksi</h3>
+            </div>
+             <div class="glass-panel menu-card fade-in" style="animation-delay: 1.0s" onclick="navTo('glosarium')">
+                <div class="menu-icon"><i class="fa-solid fa-book"></i></div>
+                <h3>Glosarium</h3>
+            </div>
+            <div class="glass-panel menu-card fade-in" style="animation-delay: 1.1s" onclick="navTo('informasi')">
+                <div class="menu-icon"><i class="fa-solid fa-circle-info"></i></div>
+                <h3>Informasi</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 4: PENDAHULUAN -->
+    <section id="page-pendahuluan" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-bullseye"></i> Pendahuluan Misi</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in">
+            <h3>Tujuan Pembelajaran</h3>
+            <ul style="margin-top: 10px; margin-left: 20px; margin-bottom: 20px;">
+                <li>Menjelaskan proses terjadinya gerhana matahari.</li>
+                <li>Menjelaskan proses terjadinya gerhana bulan.</li>
+                <li>Menganalisis posisi Matahari, Bumi, dan Bulan saat gerhana.</li>
+                <li>Mengidentifikasi jenis-jenis gerhana.</li>
+            </ul>
+            
+            <div class="fact-box">
+                <strong><i class="fa-solid fa-comment-dots"></i> Apersepsi:</strong> "Pernahkah kamu melihat bulan purnama tiba-tiba berubah warna menjadi kemerahan di malam hari? Atau siang hari yang cerah tiba-tiba menjadi gelap gulita selama beberapa menit? Mengapa fenomena menakjubkan itu bisa terjadi di alam semesta kita?"
+            </div>
+
+            <h3>Petunjuk Penggunaan MPI</h3>
+            <p>Jelajahi setiap menu secara berurutan mulai dari Pretest, Ruang Materi, hingga Misi Evaluasi. Kumpulkan XP dan raih predikat tertinggi sebagai Master Gerhana! Gunakan Lab Maya untuk bereksperimen langsung mengatur posisi benda langit.</p>
+            
+            <div class="nav-buttons">
+                <div></div>
+                <button class="btn" onclick="navTo('pretest')">Lanjut ke Pretest <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 5: PRETEST -->
+    <section id="page-pretest" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-file-signature"></i> Pretest</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in quiz-container" id="pretest-container">
+            <p style="margin-bottom:20px; color:var(--text-muted);">Mari kita uji pengetahuan awalku sebelum memulai penjelajahan!</p>
+            <div id="pretest-quiz-area"></div>
+            <button class="btn hidden" id="btn-submit-pretest" onclick="submitPretest()" style="margin-top: 20px;"><i class="fa-solid fa-paper-plane"></i> Kirim Jawaban</button>
+            <div id="pretest-result" class="hidden" style="margin-top: 20px; text-align: center;"></div>
+        </div>
+    </section>
+
+    <!-- PAGE 6: PETA KONSEP -->
+    <section id="page-petakonsep" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-sitemap"></i> Peta Konsep</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in concept-map">
+            <div class="node"><i class="fa-solid fa-galaxy"></i> Tata Surya</div>
+            <div class="arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="row-nodes">
+                <div class="node"><i class="fa-solid fa-sun"></i> Matahari</div>
+                <div class="node"><i class="fa-solid fa-earth-asia"></i> Bumi</div>
+                <div class="node"><i class="fa-solid fa-moon"></i> Bulan</div>
+            </div>
+            <div class="arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="node"><i class="fa-solid fa-arrows-spin"></i> Pergerakan (Rotasi & Revolusi)</div>
+            <div class="arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="node" style="border-color: #e53e3e; background: rgba(229, 62, 62, 0.2);"><i class="fa-solid fa-eye-slash"></i> Fenomena Gerhana</div>
+            <div class="arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="row-nodes">
+                <div class="node">Gerhana Matahari</div>
+                <div class="node">Gerhana Bulan</div>
+            </div>
+             <div class="nav-buttons" style="width: 100%;">
+                <button class="btn btn-secondary" onclick="navTo('pretest')"><i class="fa-solid fa-arrow-left"></i> Sebelumnya</button>
+                <button class="btn" onclick="navTo('materi')">Lanjut ke Materi <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 7: RUANG MATERI -->
+    <section id="page-materi" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-book-open"></i> Ruang Materi</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in">
+            <div class="materi-nav">
+                <div class="materi-tab active" onclick="showMateri(1)">1. Posisi</div>
+                <div class="materi-tab" onclick="showMateri(2)">2. Gerhana Matahari</div>
+                <div class="materi-tab" onclick="showMateri(3)">3. Jenis G. Matahari</div>
+                <div class="materi-tab" onclick="showMateri(4)">4. Gerhana Bulan</div>
+                <div class="materi-tab" onclick="showMateri(5)">5. Jenis G. Bulan</div>
+                <div class="materi-tab" onclick="showMateri(6)">6. Cara Aman</div>
+            </div>
+
+            <!-- MATERI 1 -->
+            <div id="materi-1" class="materi-content-section active">
+                <h3>Posisi Matahari, Bumi, dan Bulan</h3>
+                <p>Bumi mengelilingi Matahari (revolusi), dan Bulan mengelilingi Bumi. Karena orbit Bulan miring sekitar 5 derajat terhadap bidang orbit Bumi (ekliptika), maka ketiga benda langit ini tidak selalu berada pada satu garis lurus yang sempurna setiap bulannya.</p>
+                
+                <!-- Ilustrasi CSS Interaktif Orbit -->
+                <div class="infographic">
+                    <!-- Sun -->
+                    <div style="position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, #fffbe0, #FFD700, #ff8c00); border-radius: 50%; left: 10%; top: 95px; box-shadow: 0 0 30px #ff8c00;"></div>
+                    <!-- Earth Orbit -->
+                    <div style="position: absolute; width: 350px; height: 120px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%; left: 15%; top: 65px;"></div>
+                    <!-- Earth -->
+                    <div style="position: absolute; width: 30px; height: 30px; background: radial-gradient(circle at 30% 30%, #5dade2, #1f618d); border-radius: 50%; right: 25%; top: 110px; box-shadow: 0 0 10px #5dade2;"></div>
+                    <!-- Moon Orbit (Tilted) -->
+                    <div style="position: absolute; width: 60px; height: 30px; border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; right: 23%; top: 110px; transform: rotate(-15deg);"></div>
+                    <!-- Moon -->
+                    <div style="position: absolute; width: 10px; height: 10px; background: #ddd; border-radius: 50%; right: 22.5%; top: 105px; box-shadow: 0 0 5px #fff;"></div>
+                    <div style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 0.9rem; color: #aaa;">Simulasi Orbit Ekliptika Bumi & Bulan</div>
+                </div>
+
+                <div class="fact-box"><i class="fa-solid fa-star"></i> <strong>Tahukah Kamu?</strong> Jika orbit Bulan tidak miring 5 derajat, kita akan mengalami gerhana matahari dan gerhana bulan setiap bulan!</div>
+            </div>
+
+            <!-- MATERI 2 -->
+            <div id="materi-2" class="materi-content-section">
+                <h3>Gerhana Matahari</h3>
+                <p>Gerhana Matahari terjadi ketika Bulan berada tepat di antara Matahari dan Bumi, sehingga bayangan Bulan jatuh ke permukaan Bumi. Hal ini hanya bisa terjadi pada saat fase Bulan Baru (New Moon).</p>
+                
+                <!-- Embedded Video YouTube -->
+                <div style="text-align: center; margin: 25px 0;">
+                    <iframe width="100%" height="315" style="max-width: 560px; border-radius: 15px; border: 2px solid var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.5);" src="https://www.youtube.com/embed/p_m8ckOLZeQ?si=v1nMXfDPKRsBcQ8v" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <p>Ada dua bagian bayangan yang terbentuk: <strong>Umbra</strong> (bayangan inti yang sangat gelap) dan <strong>Penumbra</strong> (bayangan kabur di sekitarnya).</p>
+            </div>
+
+            <!-- MATERI 3 -->
+            <div id="materi-3" class="materi-content-section">
+                <h3>Jenis Gerhana Matahari</h3>
+                <ul>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-circle" style="color:#000; border:1px solid #fff; border-radius:50%;"></i> <strong>Gerhana Total:</strong> Terjadi di daerah yang terkena Umbra Bulan. Matahari tertutup sepenuhnya.</li>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-circle-half-stroke"></i> <strong>Gerhana Sebagian:</strong> Terjadi di daerah yang terkena Penumbra Bulan. Matahari tertutup sebagian.</li>
+                    <li style="margin-bottom: 10px;"><i class="fa-regular fa-circle-dot"></i> <strong>Gerhana Cincin:</strong> Terjadi ketika Bulan berada pada titik terjauh (Apogee). Piringan Bulan tampak lebih kecil menyisakan bentuk cincin bercahaya.</li>
+                </ul>
+            </div>
+
+             <!-- MATERI 4 -->
+            <div id="materi-4" class="materi-content-section">
+                <h3>Gerhana Bulan</h3>
+                <p>Gerhana Bulan terjadi ketika Bumi berada tepat di antara Matahari dan Bulan, sehingga bayangan Bumi jatuh menutupi Bulan. Fenomena ini hanya terjadi pada saat fase Bulan Purnama (Full Moon).</p>
+                
+                <div class="infographic">
+                    <!-- Sun -->
+                    <div style="position: absolute; width: 80px; height: 80px; background: radial-gradient(circle, #FFD700, #ff8c00); border-radius: 50%; left: -20px; top: 85px;"></div>
+                    <!-- Earth -->
+                    <div style="position: absolute; width: 40px; height: 40px; background: radial-gradient(circle at 30% 30%, #5dade2, #1f618d); border-radius: 50%; left: 45%; top: 105px;"></div>
+                    <!-- Umbra Shadow -->
+                    <div style="position: absolute; width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-left: 200px solid rgba(255,255,255,0.1); left: calc(45% + 40px); top: 105px; filter: brightness(0); opacity: 0.8;"></div>
+                    <!-- Red Moon -->
+                    <div style="position: absolute; width: 20px; height: 20px; background: radial-gradient(circle at 30% 30%, #ff4500, #8b0000); border-radius: 50%; right: 15%; top: 115px; box-shadow: 0 0 10px #ff0000;"></div>
+                    <div style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 0.9rem; color: #aaa;">Skema Gerhana Bulan Total (Blood Moon)</div>
+                </div>
+
+                <div class="fact-box"><i class="fa-solid fa-star"></i> <strong>Tahukah Kamu?</strong> Saat Gerhana Bulan Total, bulan berwarna kemerahan (Blood Moon) karena pembiasan spektrum cahaya merah matahari oleh atmosfer Bumi!</div>
+            </div>
+
+            <!-- MATERI 5 -->
+            <div id="materi-5" class="materi-content-section">
+                <h3>Jenis Gerhana Bulan</h3>
+                <ul>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-circle" style="color:#8b0000;"></i> <strong>Gerhana Bulan Total:</strong> Seluruh bagian Bulan masuk ke daerah Umbra Bumi.</li>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-circle-half-stroke" style="color:#8b0000;"></i> <strong>Gerhana Bulan Sebagian:</strong> Hanya sebagian Bulan yang masuk ke daerah Umbra Bumi.</li>
+                    <li style="margin-bottom: 10px;"><i class="fa-solid fa-circle" style="color:#aaa;"></i> <strong>Gerhana Bulan Penumbra:</strong> Bulan hanya masuk ke daerah Penumbra Bumi, sedikit lebih redup saja.</li>
+                </ul>
+            </div>
+
+            <!-- MATERI 6 -->
+            <div id="materi-6" class="materi-content-section">
+                <h3>Cara Aman Mengamati Gerhana</h3>
+                <p><i class="fa-solid fa-triangle-exclamation" style="color: var(--accent);"></i> <strong>Gerhana Matahari:</strong> JANGAN PERNAH melihat secara langsung dengan mata telanjang. Gunakan kacamata khusus gerhana dengan filter ND, atau metode proyeksi lubang jarum.</p>
+                <p><i class="fa-solid fa-check-circle" style="color: var(--success);"></i> <strong>Gerhana Bulan:</strong> Sangat aman dilihat dengan mata telanjang. Menggunakan teleskop atau teropong binokular akan membuat kawah bulan terlihat menakjubkan.</p>
+                
+                <div class="nav-buttons" style="margin-top: 40px;">
+                    <button class="btn btn-secondary" onclick="navTo('petakonsep')"><i class="fa-solid fa-arrow-left"></i> Peta Konsep</button>
+                    <button class="btn" onclick="finishMateri()">Lanjut Lab Maya <i class="fa-solid fa-microscope"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 8: LAB MAYA -->
+    <section id="page-labmaya" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-microscope"></i> Lab Maya</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in">
+            <p><strong>Misi Simulasi:</strong> Geser (Drag & Drop) Bumi dan Bulan untuk melihat pembentukan bayangan <strong>Umbra (Gelap)</strong> dan <strong>Penumbra (Kabur)</strong>. Susun pada satu garis lurus horizontal untuk menciptakan Gerhana!</p>
+            
+            <div id="lab-status"><i class="fa-solid fa-arrows-up-down-left-right"></i> Susun benda langit...</div>
+            
+            <div id="lab-container">
+                <!-- SVG layer for realistic dynamic Shadows -->
+                <svg id="shadow-svg">
+                    <defs>
+                        <linearGradient id="penumbraGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="rgba(255,255,255,0.15)" />
+                            <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                        </linearGradient>
+                    </defs>
+                    <polygon id="earth-penumbra" points="" fill="url(#penumbraGrad)"/>
+                    <polygon id="earth-umbra" points="" fill="rgba(0,0,0,0.85)"/>
+                    <polygon id="moon-penumbra" points="" fill="url(#penumbraGrad)"/>
+                    <polygon id="moon-umbra" points="" fill="rgba(0,0,0,0.9)"/>
+                </svg>
+
+                <div class="orbit-line" style="width: 500px; height: 500px; left: 90px; top: -50px;"></div>
+                <!-- Pure CSS celestial bodies without text emojis -->
+                <div id="sun-obj" class="celestial" title="Matahari"></div>
+                <div id="earth-obj" class="celestial" title="Bumi"></div>
+                <div id="moon-obj" class="celestial" title="Bulan"></div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="resetLab()"><i class="fa-solid fa-rotate-right"></i> Reset Posisi</button>
+            <button class="btn" onclick="navTo('lkpd')" style="float: right;">Lanjut LKPD <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+    </section>
+
+    <!-- PAGE 9: LKPD INVESTIGASI -->
+    <section id="page-lkpd" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-clipboard-list"></i> LKPD Investigasi</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in">
+            <h3><i class="fa-solid fa-magnifying-glass"></i> Misi Peneliti Antariksa</h3>
+            <p>Berdasarkan simulasi di Lab Maya, jawablah pertanyaan berikut:</p>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label>1. Jelaskan urutan posisi benda langit saat terjadi Gerhana Matahari Total!</label>
+                <textarea id="lkpd-1" class="form-control" rows="3" oninput="saveLKPD()"></textarea>
+            </div>
+            <div class="form-group">
+                <label>2. Jelaskan urutan posisi benda langit saat terjadi Gerhana Bulan Total!</label>
+                <textarea id="lkpd-2" class="form-control" rows="3" oninput="saveLKPD()"></textarea>
+            </div>
+            <div class="form-group">
+                <label>3. Mengapa saat gerhana bulan total, bulan terlihat kemerahan?</label>
+                <textarea id="lkpd-3" class="form-control" rows="3" oninput="saveLKPD()"></textarea>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--success);" id="lkpd-save-status"><i class="fa-solid fa-cloud-arrow-up"></i> Tersimpan otomatis (Auto Save).</p>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="navTo('labmaya')"><i class="fa-solid fa-arrow-left"></i> Lab Maya</button>
+                <button class="btn" onclick="navTo('evaluasi')">Lanjut Evaluasi <i class="fa-solid fa-brain"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 10: MISI EVALUASI -->
+    <section id="page-evaluasi" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-brain"></i> Misi Evaluasi</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in quiz-container" id="evaluasi-container">
+            <p style="margin-bottom:20px; color:var(--accent);"><i class="fa-solid fa-medal"></i> Selesaikan misi terakhir ini untuk mendapatkan predikat!</p>
+            <div id="evaluasi-quiz-area"></div>
+            <button class="btn hidden" id="btn-submit-eval" onclick="submitEvaluasi()" style="margin-top: 20px;"><i class="fa-solid fa-paper-plane"></i> Kirim Hasil Misi</button>
+            <div id="evaluasi-result" class="hidden" style="margin-top: 20px; text-align: center;"></div>
+        </div>
+    </section>
+
+    <!-- PAGE 11: HASIL MISI -->
+    <section id="page-hasil" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-trophy"></i> Laporan Hasil Misi</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in result-card">
+            <div id="result-avatar" style="font-size: 4rem; display: inline-block; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 50%; color: var(--accent); border: 2px solid var(--accent); margin-bottom: 15px;"></div>
+            <h2 id="result-name">Nama Siswa</h2>
+            <p id="result-class">Kelas VIII</p>
+            
+            <div class="badge-container">
+                <div class="badge" title="Materi Selesai"><i class="fa-solid fa-book-open"></i></div>
+                <div class="badge" title="Lab Diselesaikan"><i class="fa-solid fa-microscope"></i></div>
+                <div class="badge" title="Evaluasi Selesai"><i class="fa-solid fa-medal"></i></div>
+            </div>
+
+            <p style="margin-top: 20px;">Nilai Evaluasi Akhir:</p>
+            <div class="result-score" id="result-score">0</div>
+            
+            <h3 id="result-predikat" style="color: var(--success); margin-bottom: 20px;"><i class="fa-solid fa-star"></i> Ahli Gerhana</h3>
+            
+            <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+                <p>Pretest: <span id="result-pretest" style="font-weight:bold; color:var(--accent);">0</span></p>
+                <p>Total XP: <span id="result-xp" style="font-weight:bold; color:var(--accent);">0</span></p>
+                <p>Level: <span id="result-level" style="font-weight:bold; color:var(--accent);">1</span></p>
+            </div>
+
+            <div class="nav-buttons" style="justify-content: center; gap: 15px;">
+                <button class="btn" onclick="alert('Sertifikat berhasil diunduh! (Simulasi)')"><i class="fa-solid fa-certificate"></i> Cetak Sertifikat</button>
+                <button class="btn btn-secondary" onclick="navTo('refleksi')">Lanjut Refleksi <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 12: REFLEKSI -->
+    <section id="page-refleksi" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-lightbulb"></i> Refleksi Penjelajahan</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in">
+            <p>Bagaimana petualanganmu hari ini? Ceritakan pengalamanmu!</p>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Apa hal baru yang kamu pelajari hari ini?</label>
+                <textarea id="ref-1" class="form-control" rows="3" oninput="saveRefleksi()"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Bagian mana dari media ini yang paling menarik?</label>
+                <textarea id="ref-2" class="form-control" rows="3" oninput="saveRefleksi()"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Apakah masih ada materi yang membingungkan? Sebutkan!</label>
+                <textarea id="ref-3" class="form-control" rows="3" oninput="saveRefleksi()"></textarea>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--success);" id="ref-save-status"><i class="fa-solid fa-cloud-arrow-up"></i> Tersimpan otomatis (Auto Save).</p>
+            
+            <button class="btn" style="margin-top:20px; width:100%;" onclick="navTo('dashboard')"><i class="fa-solid fa-flag-checkered"></i> Selesai & Kembali ke Dashboard</button>
+        </div>
+    </section>
+
+     <!-- PAGE 13: GLOSARIUM -->
+    <section id="page-glosarium" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-book"></i> Glosarium</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in">
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <strong style="color:var(--accent); font-size:1.2rem;">Umbra</strong><br>
+                    Bayangan inti yang sangat gelap yang terbentuk di belakang benda langit yang menghalangi cahaya.
+                </li>
+                <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <strong style="color:var(--accent); font-size:1.2rem;">Penumbra</strong><br>
+                    Bayangan kabur/tambahan yang terbentuk di sekitar umbra.
+                </li>
+                <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <strong style="color:var(--accent); font-size:1.2rem;">Orbit</strong><br>
+                    Jalur yang dilalui oleh suatu benda langit saat mengelilingi benda langit lainnya karena pengaruh gaya gravitasi.
+                </li>
+                <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <strong style="color:var(--accent); font-size:1.2rem;">Rotasi</strong><br>
+                    Perputaran suatu benda pada porosnya sendiri (seperti gasing).
+                </li>
+                <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <strong style="color:var(--accent); font-size:1.2rem;">Revolusi</strong><br>
+                    Perputaran suatu benda mengelilingi benda lain (contoh: Bumi merevolusi Matahari).
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PAGE 14: INFORMASI -->
+    <section id="page-informasi" class="page">
+        <div class="page-header">
+            <h2><i class="fa-solid fa-circle-info"></i> Informasi Pengembang</h2>
+            <button class="btn btn-secondary" onclick="navTo('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</button>
+        </div>
+        <div class="glass-panel content-box fade-in" style="text-align: center;">
+            <div style="font-size: 5rem; margin-bottom: 10px; color: var(--accent);"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <h3 style="font-size: 1.5rem;">Salehuddin, S.Pd</h3>
+            <p style="color: var(--accent); margin-bottom: 20px;">Guru IPA SMP Negeri Sinombayuga</p>
+            
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 30px;">
+                Media Pembelajaran Interaktif ini disusun untuk membantu peserta didik kelas VIII memahami konsep tata surya, khususnya fenomena Gerhana Matahari dan Gerhana Bulan melalui pendekatan inkuiri dan gamifikasi.
+            </p>
+
+            <div style="margin-top: 30px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <p>Referensi: Buku Paket IPA SMP Kelas VIII Kemdikbud</p>
+                <p>Aset Visual: FontAwesome & CSS Graphics</p>
+                <p>© 2026 Media Pembelajaran Interaktif Gerhana. All Rights Reserved.</p>
+            </div>
+            <button class="btn btn-secondary" style="margin-top: 20px;" onclick="logout()"><i class="fa-solid fa-power-off"></i> Keluar Aplikasi (Reset Data)</button>
+        </div>
+    </section>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // --- SOUND SYSTEM ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        
+        function playSound(type) {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'success') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+            }
+        }
+
+        // --- STATE MANAGEMENT & LOCAL STORAGE ---
+        let userData = {
+            name: '', kelas: '', absen: '', avatar: '<i class="fa-solid fa-user-astronaut"></i>',
+            xp: 0, level: 1, progress: 0,
+            pretestDone: false, pretestScore: 0,
+            materiDone: false,
+            labDone: false,
+            evalDone: false, evalScore: 0,
+            date: new Date().toLocaleDateString()
+        };
+
+        const levels = [
+            { threshold: 0, title: "Kadet Antariksa" },
+            { threshold: 50, title: "Peneliti Muda" },
+            { threshold: 100, title: "Ahli Bulan" },
+            { threshold: 150, title: "Ahli Matahari" },
+            { threshold: 200, title: "Master Gerhana" }
+        ];
+
+        function saveData() { localStorage.setItem('gerhanaData', JSON.stringify(userData)); }
+        
+        function loadData() {
+            const saved = localStorage.getItem('gerhanaData');
+            if (saved) {
+                userData = JSON.parse(saved);
+                updateDashboardUI();
+                return true;
+            }
+            return false;
+        }
+
+        function addXP(amount, reason) {
+            userData.xp += amount;
+            let newLevel = 1;
+            let newTitle = levels[0].title;
+            for(let i=0; i<levels.length; i++) {
+                if(userData.xp >= levels[i].threshold) {
+                    newLevel = i + 1;
+                    newTitle = levels[i].title;
+                }
+            }
+            if(newLevel > userData.level) {
+                userData.level = newLevel;
+                showNovaMsg(`Selamat! Kamu naik Level ${newLevel}: ${newTitle}! 🎉`);
+                playSound('success');
+            } else {
+                showNovaMsg(`+${amount} XP (${reason})`);
+            }
+            
+            userData.progress = Math.min(100, Math.round((userData.xp / 250) * 100));
+            saveData();
+            updateDashboardUI();
+        }
+
+        // --- NAVIGATION & UI ---
+        function navTo(pageId) {
+            playSound('click');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+            updateNovaText(pageId);
+            if(pageId === 'labmaya') updateShadows(); // Force render shadows on enter
+        }
+
+        // --- LOGIN ---
+        function selectAvatar(el, iconHtml) {
+            playSound('click');
+            document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+            el.classList.add('selected');
+            userData.avatar = iconHtml;
+        }
+
+        function registerUser() {
+            const name = document.getElementById('reg-name').value;
+            const kelas = document.getElementById('reg-class').value;
+            const absen = document.getElementById('reg-absen').value;
+            
+            if(!name || !kelas || !absen) { alert("Mohon lengkapi semua data misi!"); return; }
+            
+            userData.name = name;
+            userData.kelas = kelas;
+            userData.absen = absen;
+            saveData();
+            playSound('success');
+            navTo('dashboard');
+            document.getElementById('nova-assistant').classList.remove('hidden');
+            showNovaMsg(`Selamat datang, ${userData.name}! Saya NOVA. Mari mulai petualangan!`);
+        }
+
+        function logout() {
+            if(confirm("Yakin ingin mereset semua data pembelajaran?")) {
+                localStorage.removeItem('gerhanaData');
+                location.reload();
+            }
+        }
+
+        function updateDashboardUI() {
+            document.getElementById('dash-name').innerText = userData.name;
+            document.getElementById('dash-class').innerText = `${userData.kelas} - Absen ${userData.absen}`;
+            document.getElementById('dash-avatar').innerHTML = userData.avatar;
+            document.getElementById('dash-xp').innerText = userData.xp;
+            document.getElementById('dash-level').innerHTML = `<i class="fa-solid fa-rocket"></i> ${levels[userData.level-1].title}`;
+            document.getElementById('dash-progress-text').innerText = `${userData.progress}%`;
+            document.getElementById('dash-progress-bar').style.width = `${userData.progress}%`;
+            
+            document.getElementById('result-name').innerText = userData.name;
+            document.getElementById('result-class').innerText = userData.kelas;
+            document.getElementById('result-avatar').innerHTML = userData.avatar;
+            document.getElementById('result-score').innerText = userData.evalScore;
+            document.getElementById('result-pretest').innerText = userData.pretestScore;
+            document.getElementById('result-xp').innerText = userData.xp;
+            document.getElementById('result-level').innerText = userData.level;
+            
+            let predikat = "<i class='fa-solid fa-rotate-right'></i> Perlu Latihan Lagi";
+            let pColor = "var(--danger)";
+            if(userData.evalScore >= 90) { predikat = "<i class='fa-solid fa-star'></i> Ahli Gerhana"; pColor = "var(--accent)"; }
+            else if(userData.evalScore >= 80) { predikat = "<i class='fa-solid fa-shuttle-space'></i> Peneliti Antariksa"; pColor = "var(--success)"; }
+            else if(userData.evalScore >= 70) { predikat = "<i class='fa-solid fa-rocket'></i> Kadet Antariksa"; pColor = "#4299e1"; }
+            
+            const pEl = document.getElementById('result-predikat');
+            pEl.innerHTML = predikat;
+            pEl.style.color = pColor;
+        }
+
+        // --- NOVA AI ---
+        function showNovaMsg(text) {
+            const bubble = document.getElementById('nova-text');
+            bubble.innerText = text;
+            bubble.style.display = 'block';
+            setTimeout(() => { bubble.style.display = 'none'; }, 5000);
+        }
+
+        function toggleNovaBubble() {
+            const bubble = document.getElementById('nova-text');
+            bubble.style.display = bubble.style.display === 'block' ? 'none' : 'block';
+            playSound('click');
+        }
+
+        function updateNovaText(page) {
+            const msgs = {
+                'dashboard': "Pilih menu untuk melanjutkan misi. Kumpulkan XP sebanyak-banyaknya!",
+                'pendahuluan': "Pahami tujuan misi kita hari ini. Baca dengan seksama ya!",
+                'pretest': "Jangan takut salah! Ini hanya untuk mengukur kesiapan awalmu.",
+                'petakonsep': "Lihat hubungan antar konsep ini. Semuanya saling berkaitan!",
+                'materi': "Pelajari materi ini. Tonton video simulasi untuk pemahaman lebih baik.",
+                'labmaya': "Tarik Bumi/Bulan. Perhatikan bagaimana bayangan Umbra dan Penumbra terbentuk!",
+                'lkpd': "Catat hasil pengamatanmu dari Lab Maya di sini. Auto-save aktif!",
+                'evaluasi': "Waktunya menguji kemampuanmu. Fokus dan pilih jawaban terbaik!",
+                'hasil': "Ini laporan misimu. Kamu hebat!",
+                'refleksi': "Apa yang kamu rasakan hari ini? Yuk, tuangkan pikiranmu."
+            };
+            if(msgs[page]) showNovaMsg(msgs[page]);
+        }
+
+        // --- RUANG MATERI ---
+        function showMateri(id) {
+            playSound('click');
+            document.querySelectorAll('.materi-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.materi-content-section').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.materi-tab:nth-child(${id})`).classList.add('active');
+            document.getElementById(`materi-${id}`).classList.add('active');
+            if(id === 6 && !userData.materiDone) {
+                userData.materiDone = true;
+                addXP(20, "Membaca Materi");
+            }
+        }
+        function finishMateri() {
+            if(!userData.materiDone) {
+                userData.materiDone = true;
+                addXP(20, "Membaca Materi");
+            }
+            navTo('labmaya');
+        }
+
+        // --- LAB MAYA (Dynamic Shadows & Drag-and-Drop) ---
+        let draggedObj = null;
+        let offsetX, offsetY;
+        const labContainer = document.getElementById('lab-container');
+        const earth = document.getElementById('earth-obj');
+        const moon = document.getElementById('moon-obj');
+        const sun = document.getElementById('sun-obj');
+        const statusText = document.getElementById('lab-status');
+
+        function setupDrag(element) {
+            element.addEventListener('pointerdown', (e) => {
+                draggedObj = element;
+                const rect = element.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                element.style.cursor = 'grabbing';
+            });
+        }
+
+        document.addEventListener('pointermove', (e) => {
+            if (!draggedObj) return;
+            e.preventDefault();
+            const containerRect = labContainer.getBoundingClientRect();
+            let x = e.clientX - containerRect.left - offsetX;
+            let y = e.clientY - containerRect.top - offsetY;
+
+            x = Math.max(0, Math.min(x, containerRect.width - draggedObj.offsetWidth));
+            y = Math.max(0, Math.min(y, containerRect.height - draggedObj.offsetHeight));
+
+            draggedObj.style.left = x + 'px';
+            draggedObj.style.top = y + 'px';
+            updateShadows();
+            checkEclipse();
+        });
+
+        document.addEventListener('pointerup', () => {
+            if (draggedObj) {
+                draggedObj.style.cursor = 'grab';
+                draggedObj = null;
+            }
+        });
+
+        setupDrag(earth);
+        setupDrag(moon);
+
+        // Calculate dynamic shadow polygons
+        function getShadowPolygons(sx, sy, sr, ox, oy, or) {
+            const dx = ox - sx; const dy = oy - sy;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if(d === 0) return {umbra: "", penumbra: ""};
+            
+            const nx = dx/d; const ny = dy/d;
+            const tx = -ny; const ty = nx;
+            
+            // Tangent points on Object
+            const ot1x = ox + tx * or; const ot1y = oy + ty * or;
+            const ot2x = ox - tx * or; const ot2y = oy - ty * or;
+            
+            // Umbra (converging)
+            const umbraL = d * (or / (sr - or));
+            const tipX = ox + nx * umbraL;
+            const tipY = oy + ny * umbraL;
+            const umbraPts = `${ot1x},${ot1y} ${tipX},${tipY} ${ot2x},${ot2y}`;
+            
+            // Penumbra (diverging)
+            const penuL = 800; // Far distance
+            const spread = 0.6; // Spread factor
+            const pt1x = ot1x + nx * penuL + tx * penuL * spread;
+            const pt1y = ot1y + ny * penuL + ty * penuL * spread;
+            const pt2x = ot2x + nx * penuL - tx * penuL * spread;
+            const pt2y = ot2y + ny * penuL - ty * penuL * spread;
+            const penuPts = `${ot1x},${ot1y} ${pt1x},${pt1y} ${pt2x},${pt2y} ${ot2x},${ot2y}`;
+            
+            return { umbra: umbraPts, penumbra: penuPts };
+        }
+
+        function updateShadows() {
+            const sR = sun.getBoundingClientRect();
+            const eR = earth.getBoundingClientRect();
+            const mR = moon.getBoundingClientRect();
+            const cR = labContainer.getBoundingClientRect();
+            
+            const sx = (sR.left - cR.left) + sR.width/2;
+            const sy = (sR.top - cR.top) + sR.height/2;
+            const sr = 40; // visual radius
+            
+            const ex = (eR.left - cR.left) + eR.width/2;
+            const ey = (eR.top - cR.top) + eR.height/2;
+            const er = 30; // visual radius
+            
+            const mx = (mR.left - cR.left) + mR.width/2;
+            const my = (mR.top - cR.top) + mR.height/2;
+            const mr = 15; // visual radius
+            
+            // Earth Shadow
+            const eShad = getShadowPolygons(sx, sy, sr, ex, ey, er);
+            document.getElementById('earth-umbra').setAttribute('points', eShad.umbra);
+            document.getElementById('earth-penumbra').setAttribute('points', eShad.penumbra);
+            
+            // Moon Shadow
+            const mShad = getShadowPolygons(sx, sy, sr, mx, my, mr);
+            document.getElementById('moon-umbra').setAttribute('points', mShad.umbra);
+            document.getElementById('moon-penumbra').setAttribute('points', mShad.penumbra);
+        }
+
+        function checkEclipse() {
+            const sR = sun.getBoundingClientRect();
+            const eR = earth.getBoundingClientRect();
+            const mR = moon.getBoundingClientRect();
+
+            const sY = sR.top + sR.height/2;
+            const eY = eR.top + eR.height/2;
+            const mY = mR.top + mR.height/2;
+
+            const sX = sR.left + sR.width/2;
+            const eX = eR.left + eR.width/2;
+            const mX = mR.left + mR.width/2;
+
+            const yTolerance = 30;
+            const alignedY = Math.abs(sY - eY) < yTolerance && Math.abs(sY - mY) < yTolerance;
+
+            if(alignedY) {
+                // Solar Eclipse: Sun -> Moon -> Earth
+                if(mX > sX && mX < eX && Math.abs((mX-sX) - (eX-mX)/2 ) < 150) {
+                    statusText.innerHTML = "<i class='fa-solid fa-circle-check'></i> Misi Berhasil: Gerhana Matahari Total!";
+                    statusText.style.color = "var(--success)";
+                    labContainer.style.boxShadow = "inset 0 0 50px rgba(255,255,255,0.2)";
+                    triggerLabSuccess();
+                    return;
+                }
+                // Lunar Eclipse: Sun -> Earth -> Moon
+                if(eX > sX && eX < mX) {
+                    statusText.innerHTML = "<i class='fa-solid fa-circle-check'></i> Misi Berhasil: Gerhana Bulan Total!";
+                    statusText.style.color = "var(--success)";
+                    moon.style.background = "radial-gradient(circle at 30% 30%, #ff4500, #8b0000, #222)"; // Blood moon
+                    moon.style.boxShadow = "0 0 15px #ff0000";
+                    labContainer.style.boxShadow = "inset 0 0 50px rgba(229,62,62,0.2)";
+                    triggerLabSuccess();
+                    return;
+                }
+            }
+            
+            // Default
+            statusText.innerHTML = "<i class='fa-solid fa-arrows-up-down-left-right'></i> Susun benda langit sejajar secara horizontal...";
+            statusText.style.color = "var(--accent)";
+            moon.style.background = "radial-gradient(circle at 30% 30%, #e0e0e0, #888 70%, #222)";
+            moon.style.boxShadow = "0 0 10px rgba(255,255,255,0.2)";
+            labContainer.style.boxShadow = "inset 0 0 50px rgba(0,0,0,0.8)";
+        }
+
+        function triggerLabSuccess() {
+            playSound('success');
+            if(!userData.labDone) {
+                userData.labDone = true;
+                addXP(30, "Menyelesaikan Lab Maya");
+            }
+        }
+
+        function resetLab() {
+            earth.style.left = '300px'; earth.style.top = '170px';
+            moon.style.left = '200px'; moon.style.top = '185px';
+            updateShadows();
+            checkEclipse();
+        }
+
+        // --- QUIZ LOGIC ---
+        const pretestQ = [
+            { q: "Apa yang menyebabkan terjadinya gerhana?", o: ["Bintang jatuh", "Pergerakan Bumi dan Bulan menghalangi cahaya Matahari", "Awan mendung yang tebal", "Perubahan suhu drastis"], a: 1 },
+            { q: "Posisi yang benar saat Gerhana Matahari adalah...", o: ["Matahari - Bumi - Bulan", "Bumi - Matahari - Bulan", "Matahari - Bulan - Bumi", "Bulan - Matahari - Bumi"], a: 2 },
+            { q: "Gerhana Bulan terjadi pada fase...", o: ["Bulan Baru", "Bulan Sabit", "Bulan Separuh", "Bulan Purnama"], a: 3 },
+            { q: "Bayangan gelap inti saat terjadi gerhana disebut...", o: ["Penumbra", "Umbra", "Orbit", "Korona"], a: 1 },
+            { q: "Bagaimana cara aman melihat Gerhana Matahari?", o: ["Kacamata hitam biasa", "Melihat pantulan di air", "Kacamata khusus filter gerhana", "Teropong tanpa filter"], a: 2 }
+        ];
+
+        const evalQ = [
+            { q: "Posisi Matahari - Bulan - Bumi pada satu garis lurus menyebabkan...", o: ["Gerhana Bulan", "Gerhana Matahari", "Pasang perbani", "Bulan purnama"], a: 1 },
+            { q: "Jika Bulan berada di daerah Penumbra Bumi, yang terjadi adalah...", o: ["Gerhana Bulan Total", "Gerhana Matahari Total", "Gerhana Bulan Penumbra", "Gerhana Bulan Sebagian"], a: 2 },
+            { q: "Mengapa Gerhana Matahari Total hanya berlangsung beberapa menit?", o: ["Karena bayangan umbra Bulan kecil dibandingkan Bumi", "Karena Matahari bergerak cepat", "Karena Bumi berputar lambat", "Karena Bulan berhenti bergerak"], a: 0 },
+            { q: "Saat gerhana bulan total, bulan tampak kemerahan (Blood Moon) karena...", o: ["Bulan memancarkan cahaya merah", "Pembiasan spektrum merah oleh atmosfer Bumi", "Pantulan planet Mars", "Suhu bulan sangat panas"], a: 1 },
+            { q: "Gerhana Matahari Cincin terjadi ketika...", o: ["Bulan berada terdekat dari Bumi", "Bulan berada terjauh dari Bumi (Apogee)", "Matahari mengecil", "Bumi berhenti rotasi"], a: 1 }
+        ];
+
+        function renderQuiz(questions, containerId, btnId) {
+            let html = '';
+            questions.forEach((item, index) => {
+                html += `<div class="question" id="${containerId}-q${index}">
+                    <p><strong>${index + 1}. ${item.q}</strong></p>
+                    <div class="options">`;
+                item.o.forEach((opt, oIndex) => {
+                    html += `<div class="option" onclick="selectOption('${containerId}', ${index}, ${oIndex}, this)">${String.fromCharCode(65+oIndex)}. ${opt}</div>`;
+                });
+                html += `</div></div>`;
+            });
+            document.getElementById(containerId + '-quiz-area').innerHTML = html;
+            document.getElementById(btnId).classList.remove('hidden');
+        }
+
+        let answers = { pretest: {}, evaluasi: {} };
+
+        function selectOption(type, qIndex, oIndex, el) {
+            playSound('click');
+            const parent = el.parentElement;
+            parent.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            answers[type][qIndex] = oIndex;
+        }
+
+        function calculateScore(type, questions) {
+            let correctCount = 0;
+            questions.forEach((item, index) => {
+                const userAns = answers[type][index];
+                const opts = document.getElementById(`${type}-q${index}`).querySelectorAll('.option');
+                if(userAns !== undefined) {
+                    if(userAns === item.a) {
+                        correctCount++;
+                        opts[userAns].classList.add('correct');
+                    } else {
+                        opts[userAns].classList.add('wrong');
+                        opts[item.a].classList.add('correct');
+                    }
+                } else {
+                    opts[item.a].classList.add('correct');
+                }
+                opts.forEach(opt => opt.style.pointerEvents = 'none');
+            });
+            return (correctCount / questions.length) * 100;
+        }
+
+        function submitPretest() {
+            if(Object.keys(answers.pretest).length < pretestQ.length) { alert("Jawab semua soal terlebih dahulu!"); return; }
+            const score = calculateScore('pretest', pretestQ);
+            document.getElementById('btn-submit-pretest').classList.add('hidden');
+            const resDiv = document.getElementById('pretest-result');
+            resDiv.innerHTML = `<h3>Nilai Pretest: ${score}</h3><button class="btn" style="margin-top:10px" onclick="navTo('petakonsep')">Lanjut ke Peta Konsep <i class="fa-solid fa-arrow-right"></i></button>`;
+            resDiv.classList.remove('hidden');
+            if(!userData.pretestDone) { userData.pretestDone = true; userData.pretestScore = score; addXP(10, "Menyelesaikan Pretest"); }
+            playSound('success');
+        }
+
+        function submitEvaluasi() {
+            if(Object.keys(answers.evaluasi).length < evalQ.length) { alert("Jawab semua soal evaluasi!"); return; }
+            const score = calculateScore('evaluasi', evalQ);
+            document.getElementById('btn-submit-eval').classList.add('hidden');
+            const resDiv = document.getElementById('evaluasi-result');
+            resDiv.innerHTML = `<h3>Nilai Akhir: ${score}</h3><button class="btn" style="margin-top:10px" onclick="navTo('hasil')">Lihat Laporan Misi <i class="fa-solid fa-arrow-right"></i></button>`;
+            resDiv.classList.remove('hidden');
+            if(!userData.evalDone) { userData.evalDone = true; userData.evalScore = score; addXP(50 + (score/2), "Menyelesaikan Evaluasi"); }
+            playSound('success');
+            updateDashboardUI();
+        }
+
+        // --- LKPD & REFLEKSI SAVING ---
+        function saveLKPD() {
+            localStorage.setItem('lkpd1', document.getElementById('lkpd-1').value);
+            localStorage.setItem('lkpd2', document.getElementById('lkpd-2').value);
+            localStorage.setItem('lkpd3', document.getElementById('lkpd-3').value);
+            document.getElementById('lkpd-save-status').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Tersimpan otomatis pada ${new Date().toLocaleTimeString()}`;
+        }
+        function loadLKPD() {
+            document.getElementById('lkpd-1').value = localStorage.getItem('lkpd1') || '';
+            document.getElementById('lkpd-2').value = localStorage.getItem('lkpd2') || '';
+            document.getElementById('lkpd-3').value = localStorage.getItem('lkpd3') || '';
+        }
+
+        function saveRefleksi() {
+            localStorage.setItem('ref1', document.getElementById('ref-1').value);
+            localStorage.setItem('ref2', document.getElementById('ref-2').value);
+            localStorage.setItem('ref3', document.getElementById('ref-3').value);
+            document.getElementById('ref-save-status').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Tersimpan otomatis pada ${new Date().toLocaleTimeString()}`;
+        }
+        function loadRefleksi() {
+            document.getElementById('ref-1').value = localStorage.getItem('ref1') || '';
+            document.getElementById('ref-2').value = localStorage.getItem('ref2') || '';
+            document.getElementById('ref-3').value = localStorage.getItem('ref3') || '';
+        }
+
+        // --- INIT APP ---
+        window.onload = () => {
+            renderQuiz(pretestQ, 'pretest', 'btn-submit-pretest');
+            renderQuiz(evalQ, 'evaluasi', 'btn-submit-eval');
+            loadLKPD(); loadRefleksi();
+            updateShadows(); // Init lab maya shadows
+
+            if(loadData()) {
+                document.getElementById('nova-assistant').classList.remove('hidden');
+                setTimeout(() => {
+                    if(confirm(`Selamat datang kembali, ${userData.name}! Lanjut dari data sebelumnya?`)) { navTo('dashboard'); }
+                }, 500);
+            }
+        };
+    </script>
+</body>
+</html>
